@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>送鲜花</title>
+<link rel="stylesheet" href="css/demo.css" type="text/css" />
+<style type="text/css">
+body { margin: 0; padding: 0; position: relative;  background-position: center; width: 100%; height: 100%; background-size: 100% 100%; }
+
+</style>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/ThreeCanvas.js"></script>
+<script type="text/javascript" src="js/Snow.js"></script>
+
+<script type="text/javascript">
+	var SCREEN_WIDTH = window.innerWidth;
+	var SCREEN_HEIGHT = window.innerHeight;
+	
+	var particle;//粒子
+
+	var camera;
+	var scene;
+	var renderer;
+
+	var starSnow = 1;
+
+	var particles = []; 
+	var loopInterval;
+
+	var particleImage = new Image();
+	particleImage.src = 'images/hua.png'; 
+
+	function init() {
+		var container;
+		container = document.createElement('div');//container：画布实例;
+		container.setAttribute('id', 'flower')
+		document.body.appendChild(container);
+		particles.length = 0
+
+		camera = new THREE.PerspectiveCamera( -50, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 10000 );
+		// camera.position.x = 50;
+		camera.position.z = 500;
+		//camera.position.y = 50;
+
+		scene = new THREE.Scene();
+		scene.add(camera);
+			
+		renderer = new THREE.CanvasRenderer();
+		renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+		var material = new THREE.ParticleBasicMaterial( { map: new THREE.Texture(particleImage) } );
+		for (var i = 0; i < 5; i++) {
+			particle = new Particle3D( material);
+			particle.position.x = -Math.random() * 400;
+			particle.position.z = -Math.random() * 400;
+			// particle.position.y = Math.random() * 2000-1000;
+			// particle.position.z = -1000;
+			particle.position.y = 600;
+			particle.scale.x = particle.scale.y = 1.2;
+			scene.add( particle );
+			
+			particles.push(particle); 
+		}
+		container.appendChild( renderer.domElement );
+		
+		loopInterval = setInterval( loop, 1000 / 50 );
+	}
+
+	function loop() {
+		for(var i = 0; i<particles.length; i++){
+			var particle = particles[i]; 
+			particle.updatePhysics(); 
+
+			// with(particle.position)
+			// {
+			// 	// if((y<-1000)&&starSnow) {y+=2000;}
+
+			// 	if(x>1000) x-=2000; 
+			// 	else if(x<-1000) x+=2000;
+			// 	if(z>1000) z-=2000; 
+			// 	else if(z<-1000) z+=2000;
+			// }			
+			console.log(particle.position.y)
+			if (particle.position.y < -700 && i === particles.length - 1 ) {
+				particle.position.y = 600
+				clearInterval(loopInterval)
+				var flower = document.getElementById('flower')
+				if (flower) {
+					document.body.removeChild(flower)
+				}
+			}
+		}
+
+		camera.lookAt(scene.position); 
+
+		renderer.render( scene, camera );
+	}
+</script>
+
+</head>
+<body id="body">
+	<button id="btn">送鲜花</button>
+</body>
+<script>
+	$("#btn").click(function() {
+		init();
+	})
+</script>
+</html>
