@@ -1,0 +1,90 @@
+body {
+  background-color: black;
+  font-family: sans-serif;
+}
+.container {
+  padding: 30px;
+}
+h2 {
+  color: white;
+  font-weight: lighter;
+}
+p {
+  color: white;
+  font-size: 36px;
+  cursor: pointer;
+}
+.p1 {
+  color: transparent;
+  text-shadow: 0 0 5px rgba(255,255,255,0.8);
+  transition: all 0.2s ease-out;
+  &:hover {
+    color: white;
+    //text-shadow: 0;
+  }
+}
+
+// https://css-tricks.com/glitch-effect-text-images-svg/
+.glitch {
+  position: relative;
+}
+@keyframes noise-anim {
+  $steps:20;
+  @for $i from 0 through $steps{
+    #{percentage($i*(1/$steps))}{
+      clip:rect(random(100)+px,9999px,random(100)+px,0);
+    }
+  }
+}
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 2px;
+  text-shadow: -1px 0 red;
+  top: 0;
+  color: white;
+  background: black;
+  overflow: hidden;
+  clip: rect(0,900px,0,0); 
+  animation: noise-anim 2s infinite linear alternate-reverse;
+}
+
+@keyframes noise-anim-2 {
+  $steps: 20;
+  @for $i from 0 through $steps{
+    #{percentage($i*(1/$steps))} {
+      clip:rect(random(100)+px,9999px,random(100)+px,0);
+    }
+  }
+}
+.glitch::before{
+  content: attr(data-text);
+  position: absolute;
+  left: -1px;
+  text-shadow: 1px 0 black; 
+  top:0;
+  color: white;
+  background: black;
+  overflow: hidden;
+  clip: rect(0,900px,0,0); 
+  animation: noise-anim-2 3s infinite linear alternate-reverse;
+}
+
+
+.p3.glitch {
+  color: transparent;
+  text-shadow: 0 0 4px rgba(255,255,255,0.8);
+  transition: all 0.2s ease-out;
+  &:hover {
+    color: white;
+    //text-shadow: 0;
+  }
+}
+.p3.glitch::after {
+  opacity: 0.2;
+  text-shadow: -3px 0 rgba(255,0,0,0.9); 
+}
+.p3.glitch::before {
+  opacity: 0.2;
+  text-shadow: 1px 0 rgba(255,255,255,0.8); 
+}
