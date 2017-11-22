@@ -26,24 +26,29 @@
 			<div class="main">
 				<div id="fc-slideshow" class="fc-slideshow">
 					<ul class="fc-slides">
-						<li><img src="images/1.jpg" /><h3>Hot</h3></li>
-						<li><img src="images/2.jpg" /><h3>Cold</h3></li>
-						<li><img src="images/3.jpg" /><h3>Light</h3></li>
-						<li><img src="images/4.jpg" /><h3>Dark</h3></li>
-						<li><img src="images/5.jpg" /><h3>Soft</h3></li>
-						<li><img src="images/6.jpg" /><h3>Hard</h3></li>
-						<li><img src="images/7.jpg" /><h3>Smooth</h3></li>
-						<li><img src="images/8.jpg" /><h3>Rough</h3></li>
+						<li><img src="images/1.jpg" id="1"/><h3>Hot</h3></li>
+						<li><img src="images/2.jpg" id="2"/><h3>Cold</h3></li>
+						<li><img src="images/3.jpg" id="3"/><h3>Light</h3></li>
+						<li><img src="images/4.jpg" id="4"/><h3>Dark</h3></li>
+						<li><img src="images/5.jpg" id="5"/><h3>Soft</h3></li>
+						<li><img src="images/6.jpg" id="6"/><h3>Hard</h3></li>
+						<li><img src="images/7.jpg" id="7"/><h3>Smooth</h3></li>
+						<li><img src="images/8.jpg" id="8"/><h3>Rough</h3></li>
 					</ul>
 				</div>
 			</div>
 		</div><!-- /container -->
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
 		<script src="js/jquery.flipshow.js"></script>
 		<script>
 			$( function() {
 				
-				$( '#fc-slideshow' ).flipshow();
+				$( '#fc-slideshow' ).flipshow({
+					defaultUser: 2,
+					switchEvent: function ($nextItem) {
+						console.log($nextItem.attr('id'))
+					}
+				});
 
 			} );
 		</script>

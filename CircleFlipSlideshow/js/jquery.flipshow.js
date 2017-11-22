@@ -189,7 +189,7 @@
 			// total number of items
 			this.itemsCount = this.$items.length;
 			// current item´s index
-			this.current = 0;
+			this.current = this.options.defaultUser ? 1*this.options.defaultUser - 1 : 0;
 			this.$listItems.imagesLoaded( $.proxy( function() {
 				// show first item
 				this.$items.eq( this.current ).show();
@@ -252,6 +252,10 @@
 			}
 			else {
 				$nextItem.show();				
+			}
+			
+			if (typeof this.options.switchEvent === 'function') {
+				this.options.switchEvent($nextItem.children())
 			}
 
 		},
