@@ -11,82 +11,133 @@
   <div class="videolistwraper" id="wraper">
     <div class="videolist">
       <ul id="msg_list" style="-webkit-margin-before: 0px; -webkit-padding-start: 0px;">
-        <li class="li2">
-          <div class="msg-txt-box2">
-            <div class="msg-header" style="text-align: center; padding-top: 5px;">
-              <div>
-                <img class="avatar" src="./demo.jpg">
-              </div>
-              <div class='msg-username'>
-                test1	
-              </div>
-            </div>
-            <div class="msg-body">
-              <img class="corner" src="./corner.png">
-              testcontent
-            </div>
-            <div class='msg-time' style="width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;" >
-              11/30 10:31
-            </div>
-          </div>
-        </li>
-        <li class="li2 flag">
-          <div class="msg-txt-box2">
-            <div class="msg-header" style="text-align: center; padding-top: 5px;">
-              <div>
-                <img class="avatar" src="./demo.jpg">
-              </div>
-              <div class='msg-username'>
-                test2	
-              </div>
-            </div>
-            <div class="msg-body">
-              <img class="corner" src="./corner.png">
-              testcontent
-            </div>
-            <div class='msg-time' style="width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;" >
-              11/30 10:31
-            </div>
-          </div>
-        </li>
-        <li class="li2">
-          <div class="msg-txt-box2">
-            <div class="msg-header" style="text-align: center; padding-top: 5px;">
-              <div>
-                <img class="avatar" src="./demo.jpg">
-              </div>
-              <div class='msg-username'>
-                test3	
-              </div>
-            </div>
-            <div class="msg-body">
-              <img class="corner" src="./corner.png">
-              testcontent
-            </div>
-            <div class='msg-time' style="width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;" >
-              11/30 10:31
-            </div>
-          </div>
-        </li>
       </ul>
     </div>
     <div class="toolsbar">
       <a class="btn btn-info btn-sm  aleft " style="display:none" href="#up" >上移</a>
       <a class="btn btn-info btn-sm aright" style="display:none" href="#down" >下移</a>
-    
-      <a class="btn btn-danger btn-xs fullscreenhide" target="_self"  href="#CTX/pubservice/$pubserviceId/largscreen?img=$img&change=$change&fontSize=$fontSize&manage=$manage&last=now-5" >5分钟前</a>
-      <a class="btn btn-danger btn-xs fullscreenhide" target="_self" href="#CTX/pubservice/$pubserviceId/largscreen?img=$img&change=$change&fontSize=$fontSize&manage=$manage&last=now-15" >15分钟前</a>
-      <a class="btn btn-danger btn-xs fullscreenhide" target="_self" href="#CTX/pubservice/$pubserviceId/largscreen?img=$img&change=$change&fontSize=$fontSize&manage=$manage&last=now-30" >30分钟前</a>
-      <a class="btn btn-danger btn-xs fullscreenhide" target="_self" href="#CTX/pubservice/$pubserviceId/largscreen?img=$img&change=$change&fontSize=$fontSize&manage=$manage&last=now-60" >60分钟前</a>
       
-      <a class="btn btn-danger btn-xs fullscreenhide" id="fullscreen">全屏</a>
-      <a class="btn btn-danger btn-xs fullscreenhide" id="add">新增</a>
+      <button class="btn btn-danger btn-xs fullscreenhide" id="add" style="cursor: pointer;">新增</button>
+      <button class="btn btn-danger btn-xs fullscreenhide" id="delete" style="cursor: pointer;">删除</button>
+      <button class="btn btn-danger btn-xs fullscreenhide" id="stop" style="cursor: pointer;">计数暂停</button>
+      <button class="btn btn-danger btn-xs fullscreenhide" id="start" style="cursor: pointer;">计数开始</button>
     </div>
   </div>
   <script type="text/javascript" src="./jquery.min.js"></script>
   <script type="text/javascript" src="./Xslider.js"></script>
   <script>
-    var flag=10
+    var _html = ""
+    // 消息队列
+    var arr = []
+    // 上墙的最大消息数量
+    var maxCount = 50
+    // 当前上墙的消息数量
+    var currentCount = 0
+    // 在规定的时间内执行该方法
+    function render() {
+      var _html = ""
+      var count = arr.length < 5 ? arr.length : 5
+      var renderArr = []
+      // 若当前的信息数大于最大允许的信息数量，则把flag标记后的五条记录删除
+      if (currentCount > maxCount) {
+        var afterFlagLength = jQuery("#msg_list>li.flag").nextAll().length
+        var deleteCount = afterFlagLength < 5 ? afterFlagLength : 5
+        for(var i=0; i<deleteCount; i++) {
+          jQuery("#msg_list>li.flag").next().remove()
+        }
+        currentCount -= deleteCount
+      }
+      console.log('消息墙的信息数量', currentCount)
+      if (count > 0) {
+        currentCount += count
+        // 从消息队列中获取出排行前count条的记录，用于上墙
+        renderArr = arr.filter(function (elem, index) {
+          return index < count
+        })
+        // 从消息队列中删除已经上墙了的数据
+        arr.splice(0, count)
+        // 开始----遍历待上墙的消息数据，插入到有flag标记的最后一条记录之后，并把flag标记移到当前上墙数据的最后一条
+        for (var i=0; i<count; i++) {
+          var flag = ''
+          if (i === count-1) {
+            flag = 'flag'
+          }
+          _html += "<li class='li2 " + flag + "'>" +
+                    "<div class='msg-txt-box2'>"+
+                      "<div class='msg-header' style='text-align: center; padding-top: 5px;'>"+
+                        "<div>"+
+                          "<img class='avatar' src='./demo.jpg'>"+
+                        "</div>"+
+                        "<div class='msg-username'>"+
+                          "test"+renderArr[i]+
+                        "</div>"+
+                      "</div>"+
+                      "<div class='msg-body'>"+
+                        "<img class='corner' src='./corner.png'>"+
+                        "testcontent"+
+                      "</div>"+
+                      "<div class='msg-time' style='width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;' >"+
+                        "11/30 10:31"+
+                      "</div>"+
+                    "</div>"+
+                  "</li>"
+        }
+        // 判断消息墙上是否有消息
+        // 若无，则把消息全部append到墙上并给最后一个消息加上标记
+        // 若有，
+        if (jQuery("#msg_list>li").hasClass('flag')) {
+          jQuery("#msg_list>li.flag").addClass('used')
+          jQuery("#msg_list>li.flag").after(_html)
+          jQuery("#msg_list>li.used").removeClass('flag').removeClass('used')
+        } else {
+          jQuery("#msg_list").append(_html)
+          jQuery("#msg_list>li:last").addClass('flag')
+        }
+        jQuery("#wraper").Xslider({ 
+          scrollobj: "ul#msg_list",
+          unitdisplayed:1, //可视的单位个数   必需项;
+          numtoMove:3, //要移动的单位个数    必需项;
+          dir:"V",//水平移动还是垂直移动，默认H为水平移动，传入V则表示垂直移动;
+          loop:"cycle",
+          autoscroll:2000,
+          speed:5000,
+          normalHeight: 90
+        });
+        // 结束----遍历待上墙的消息数据，插入到有flag标记的最后一条记录之后，并把flag标记移到当前上墙数据的最后一条
+      }
+    }
+
+    for (var i=1; i<= 1; i++) {
+      _html += "<li class='li2'>"+
+                  "<div class='msg-txt-box2'>"+
+                    "<div class='msg-header' style='text-align: center; padding-top: 5px;'>"+
+                      "<div>"+
+                        "<img class='avatar' src='./demo.jpg'>"+
+                      "</div>"+
+                      "<div class='msg-username'>"+
+                        "test"+i+
+                      "</div>"+
+                    "</div>"+
+                    "<div class='msg-body'>"+
+                      "<img class='corner' src='./corner.png'>"+
+                      "testcontent"+
+                    "</div>"+
+                    "<div class='msg-time' style='width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;' >"+
+                      "11/30 10:31"+
+                    "</div>"+
+                  "</div>"+
+                "</li>"
+    }
+    // 第一次加载
+    if (jQuery("#msg_list>li").hasClass('flag')) {
+      jQuery("#msg_list>li.flag").addClass('used')
+      jQuery("#msg_list>li.flag").after(_html)
+      jQuery("#msg_list>li.used").removeClass('flag').removeClass('used')
+    } else {
+      jQuery("#msg_list").append(_html)
+      jQuery("#msg_list>li:last").addClass('flag')
+    }
+    
     jQuery("#wraper").Xslider({ 
       scrollobj: "ul#msg_list",
       unitdisplayed:1, //可视的单位个数   必需项;
@@ -97,59 +148,26 @@
       speed:5000,
       normalHeight: 90
     });
+    var scrollTimmer=setInterval(render,2000);
     jQuery("#add").on('click', function () {
-      flag++
-      var _html = "<li class='li2'>"+
-                    "<div class='msg-txt-box2'>"+
-                      "<div class='msg-header' style='text-align: center; padding-top: 5px;'>"+
-                        "<div>"+
-                          "<img class='avatar' src='./demo.jpg'>"+
-                        "</div>"+
-                        "<div class='msg-username'>"+
-                          "test"+flag+
-                        "</div>"+
-                      "</div>"+
-                      "<div class='msg-body'>"+
-                        "<img class='corner' src='./corner.png'>"+
-                        "testcontent"+
-                      "</div>"+
-                      "<div class='msg-time' style='width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;' >"+
-                        "11/30 10:31"+
-                      "</div>"+
-                    "</div>"+
-                  "</li>"+
-                  "<li class='li2 flag'>"+
-                    "<div class='msg-txt-box2'>"+
-                      "<div class='msg-header' style='text-align: center; padding-top: 5px;'>"+
-                        "<div>"+
-                          "<img class='avatar' src='./demo.jpg'>"+
-                        "</div>"+
-                        "<div class='msg-username'>"+
-                          "test"+flag+
-                        "</div>"+
-                      "</div>"+
-                      "<div class='msg-body'>"+
-                        "<img class='corner' src='./corner.png'>"+
-                        "testcontent"+
-                      "</div>"+
-                      "<div class='msg-time' style='width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;' >"+
-                        "11/30 10:31"+
-                      "</div>"+
-                    "</div>"+
-                  "</li>";
-      jQuery("#msg_list>li.flag").addClass('used')
-      jQuery("#msg_list>li.flag").after(_html)
-      jQuery("#msg_list>li.used").removeClass('flag').removeClass('used')
-      jQuery("#wraper").Xslider({ 
-        scrollobj: "ul#msg_list",
-        unitdisplayed:1, //可视的单位个数   必需项;
-        numtoMove:3, //要移动的单位个数    必需项;
-        dir:"V",//水平移动还是垂直移动，默认H为水平移动，传入V则表示垂直移动;
-        loop:"cycle",
-        autoscroll:2000,
-        speed:5000,
-        normalHeight: 90
-      });
+      var r = Math.round(Math.random()*25+1)
+      for(var i=0; i<r; i++) {
+        arr.push(''+r+i)
+      }
+    })
+    jQuery("#delete").on('click', function () {
+      console.log(jQuery("#msg_list>li.flag").nextAll().length)
+      var afterFlagLength = jQuery("#msg_list>li.flag").nextAll().length
+      var deleteCount = afterFlagLength < 5 ? afterFlagLength : 5
+      for(var i=0; i<deleteCount; i++) {
+        jQuery("#msg_list>li.flag").next().remove()
+      }
+    })
+    jQuery("#stop").on('click', function () {
+      clearInterval(scrollTimmer)
+    })
+    jQuery("#start").on('click', function () {
+      scrollTimmer=setInterval(render,2000);
     })
   </script>
 </body>
