@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="./largscreen.css" />
+</head>
+<body>
+  <div class="videolistwraper" id="wraper">
+    <div class="videolist">
+      <ul id="msg_list" style="-webkit-margin-before: 0px; -webkit-padding-start: 0px;">
+        <li class="li2">
+          <div class="msg-txt-box2">
+            <div class="msg-header" style="text-align: center; padding-top: 5px;">
+              <div>
+                <img class="avatar" src="./demo.jpg">
+              </div>
+              <div class='msg-username'>
+                test1	
+              </div>
+            </div>
+            <div class="msg-body">
+              <img class="corner" src="./corner.png">
+              testcontent
+            </div>
+            <div class='msg-time' style="width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;" >
+              11/30 10:31
+            </div>
+          </div>
+        </li>
+        <li class="li2 flag">
+          <div class="msg-txt-box2">
+            <div class="msg-header" style="text-align: center; padding-top: 5px;">
+              <div>
+                <img class="avatar" src="./demo.jpg">
+              </div>
+              <div class='msg-username'>
+                test2	
+              </div>
+            </div>
+            <div class="msg-body">
+              <img class="corner" src="./corner.png">
+              testcontent
+            </div>
+            <div class='msg-time' style="width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;" >
+              11/30 10:31
+            </div>
+          </div>
+        </li>
+        <li class="li2">
+          <div class="msg-txt-box2">
+            <div class="msg-header" style="text-align: center; padding-top: 5px;">
+              <div>
+                <img class="avatar" src="./demo.jpg">
+              </div>
+              <div class='msg-username'>
+                test3	
+              </div>
+            </div>
+            <div class="msg-body">
+              <img class="corner" src="./corner.png">
+              testcontent
+            </div>
+            <div class='msg-time' style="width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;" >
+              11/30 10:31
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="toolsbar">
+      <a class="btn btn-info btn-sm  aleft " style="display:none" href="#up" >上移</a>
+      <a class="btn btn-info btn-sm aright" style="display:none" href="#down" >下移</a>
+    
+      <a class="btn btn-danger btn-xs fullscreenhide" target="_self"  href="#CTX/pubservice/$pubserviceId/largscreen?img=$img&change=$change&fontSize=$fontSize&manage=$manage&last=now-5" >5分钟前</a>
+      <a class="btn btn-danger btn-xs fullscreenhide" target="_self" href="#CTX/pubservice/$pubserviceId/largscreen?img=$img&change=$change&fontSize=$fontSize&manage=$manage&last=now-15" >15分钟前</a>
+      <a class="btn btn-danger btn-xs fullscreenhide" target="_self" href="#CTX/pubservice/$pubserviceId/largscreen?img=$img&change=$change&fontSize=$fontSize&manage=$manage&last=now-30" >30分钟前</a>
+      <a class="btn btn-danger btn-xs fullscreenhide" target="_self" href="#CTX/pubservice/$pubserviceId/largscreen?img=$img&change=$change&fontSize=$fontSize&manage=$manage&last=now-60" >60分钟前</a>
+      
+      <a class="btn btn-danger btn-xs fullscreenhide" id="fullscreen">全屏</a>
+      <a class="btn btn-danger btn-xs fullscreenhide" id="add">新增</a>
+    </div>
+  </div>
+  <script type="text/javascript" src="./jquery.min.js"></script>
+  <script type="text/javascript" src="./Xslider.js"></script>
+  <script>
+    var flag=10
+    jQuery("#wraper").Xslider({ 
+      scrollobj: "ul#msg_list",
+      unitdisplayed:1, //可视的单位个数   必需项;
+      numtoMove:3, //要移动的单位个数    必需项;
+      dir:"V",//水平移动还是垂直移动，默认H为水平移动，传入V则表示垂直移动;
+      loop:"cycle",
+      autoscroll:2000,
+      speed:5000,
+      normalHeight: 90
+    });
+    jQuery("#add").on('click', function () {
+      flag++
+      var _html = "<li class='li2'>"+
+                    "<div class='msg-txt-box2'>"+
+                      "<div class='msg-header' style='text-align: center; padding-top: 5px;'>"+
+                        "<div>"+
+                          "<img class='avatar' src='./demo.jpg'>"+
+                        "</div>"+
+                        "<div class='msg-username'>"+
+                          "test"+flag+
+                        "</div>"+
+                      "</div>"+
+                      "<div class='msg-body'>"+
+                        "<img class='corner' src='./corner.png'>"+
+                        "testcontent"+
+                      "</div>"+
+                      "<div class='msg-time' style='width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;' >"+
+                        "11/30 10:31"+
+                      "</div>"+
+                    "</div>"+
+                  "</li>"+
+                  "<li class='li2 flag'>"+
+                    "<div class='msg-txt-box2'>"+
+                      "<div class='msg-header' style='text-align: center; padding-top: 5px;'>"+
+                        "<div>"+
+                          "<img class='avatar' src='./demo.jpg'>"+
+                        "</div>"+
+                        "<div class='msg-username'>"+
+                          "test"+flag+
+                        "</div>"+
+                      "</div>"+
+                      "<div class='msg-body'>"+
+                        "<img class='corner' src='./corner.png'>"+
+                        "testcontent"+
+                      "</div>"+
+                      "<div class='msg-time' style='width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;' >"+
+                        "11/30 10:31"+
+                      "</div>"+
+                    "</div>"+
+                  "</li>";
+      jQuery("#msg_list>li.flag").addClass('used')
+      jQuery("#msg_list>li.flag").after(_html)
+      jQuery("#msg_list>li.used").removeClass('flag').removeClass('used')
+      jQuery("#wraper").Xslider({ 
+        scrollobj: "ul#msg_list",
+        unitdisplayed:1, //可视的单位个数   必需项;
+        numtoMove:3, //要移动的单位个数    必需项;
+        dir:"V",//水平移动还是垂直移动，默认H为水平移动，传入V则表示垂直移动;
+        loop:"cycle",
+        autoscroll:2000,
+        speed:5000,
+        normalHeight: 90
+      });
+    })
+  </script>
+</body>
+</html>
