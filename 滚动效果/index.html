@@ -26,9 +26,10 @@
   <script type="text/javascript" src="./jquery.min.js"></script>
   <script type="text/javascript" src="./Xslider.js"></script>
   <script>
+    // 待插入的模板
     var _html = ""
     // 消息队列
-    var arr = []
+    var messageArr = []
     // 上墙的最大消息数量
     var maxCount = 50
     // 当前上墙的消息数量
@@ -36,7 +37,7 @@
     // 在规定的时间内执行该方法
     function render() {
       var _html = ""
-      var count = arr.length < 5 ? arr.length : 5
+      var count = messageArr.length < 5 ? messageArr.length : 5
       var renderArr = []
       // 若当前的信息数大于最大允许的信息数量，则把flag标记后的五条记录删除
       if (currentCount > maxCount) {
@@ -47,15 +48,14 @@
         }
         currentCount -= deleteCount
       }
-      console.log('消息墙的信息数量', currentCount)
       if (count > 0) {
         currentCount += count
         // 从消息队列中获取出排行前count条的记录，用于上墙
-        renderArr = arr.filter(function (elem, index) {
+        renderArr = messageArr.filter(function (elem, index) {
           return index < count
         })
         // 从消息队列中删除已经上墙了的数据
-        arr.splice(0, count)
+        messageArr.splice(0, count)
         // 开始----遍历待上墙的消息数据，插入到有flag标记的最后一条记录之后，并把flag标记移到当前上墙数据的最后一条
         for (var i=0; i<count; i++) {
           var flag = ''
@@ -152,7 +152,7 @@
     jQuery("#add").on('click', function () {
       var r = Math.round(Math.random()*25+1)
       for(var i=0; i<r; i++) {
-        arr.push(''+r+i)
+        messageArr.push(''+r+i)
       }
     })
     jQuery("#delete").on('click', function () {
