@@ -6,21 +6,42 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <link rel="stylesheet" type="text/css" href="./largscreen.css" />
+  <style>
+    .flow {
+      position: fixed;
+      bottom: -80px;
+      height: 80px;
+      width: 80px;
+    }
+    .flow2 {
+      position: fixed;
+      bottom: 0px;
+      height: 80px;
+      width: 80px;
+      opacity: 0;
+      transition: all .5s ease-in .1s;
+    }
+  </style>
 </head>
 <body>
+  <div>
+    <img src="./flower2.png" class="flow" id="flower"/>
+    <img src="./flower2.png" class="flow2" id="flower2"/>
+  </div>
   <div class="videolistwraper" id="wraper">
     <div class="videolist">
       <ul id="msg_list" style="-webkit-margin-before: 0px; -webkit-padding-start: 0px;">
       </ul>
     </div>
     <div class="toolsbar">
-      <a class="btn btn-info btn-sm  aleft " style="display:none" href="#up" >上移</a>
-      <a class="btn btn-info btn-sm aright" style="display:none" href="#down" >下移</a>
+      <a class="btn btn-info btn-sm  aleft " href="#up" >上移</a>
+      <a class="btn btn-info btn-sm aright" href="#down" >下移</a>
       
       <button class="btn btn-danger btn-xs fullscreenhide" id="add" style="cursor: pointer;">新增</button>
       <button class="btn btn-danger btn-xs fullscreenhide" id="delete" style="cursor: pointer;">删除</button>
       <button class="btn btn-danger btn-xs fullscreenhide" id="stop" style="cursor: pointer;">计数暂停</button>
       <button class="btn btn-danger btn-xs fullscreenhide" id="start" style="cursor: pointer;">计数开始</button>
+      <button class="btn btn-danger btn-xs fullscreenhide" id="run" style="cursor: pointer;">跑动</button>
     </div>
   </div>
   <script type="text/javascript" src="./jquery.min.js"></script>
@@ -31,7 +52,7 @@
     // 消息队列
     var messageArr = []
     // 上墙的最大消息数量
-    var maxCount = 50
+    var maxCount = 60
     // 当前上墙的消息数量
     var currentCount = 0
     // 在规定的时间内执行该方法
@@ -39,6 +60,7 @@
       var _html = ""
       var count = messageArr.length < 5 ? messageArr.length : 5
       var renderArr = []
+      currentCount = $("ul#msg_list").find("li").length
       // 若当前的信息数大于最大允许的信息数量，则把flag标记后的五条记录删除
       if (currentCount > maxCount) {
         var afterFlagLength = jQuery("#msg_list>li.flag").nextAll().length
@@ -48,7 +70,7 @@
         }
         currentCount -= deleteCount
       }
-      if (count > 0) {
+      if (count > 0 && currentCount < maxCount) {
         currentCount += count
         // 从消息队列中获取出排行前count条的记录，用于上墙
         renderArr = messageArr.filter(function (elem, index) {
@@ -93,60 +115,51 @@
           jQuery("#msg_list").append(_html)
           jQuery("#msg_list>li:last").addClass('flag')
         }
-        jQuery("#wraper").Xslider({ 
-          scrollobj: "ul#msg_list",
-          unitdisplayed:1, //可视的单位个数   必需项;
-          numtoMove:3, //要移动的单位个数    必需项;
-          dir:"V",//水平移动还是垂直移动，默认H为水平移动，传入V则表示垂直移动;
-          loop:"cycle",
-          autoscroll:2000,
-          speed:5000,
-          normalHeight: 90
-        });
         // 结束----遍历待上墙的消息数据，插入到有flag标记的最后一条记录之后，并把flag标记移到当前上墙数据的最后一条
       }
     }
 
-    for (var i=1; i<= 1; i++) {
-      _html += "<li class='li2'>"+
-                  "<div class='msg-txt-box2'>"+
-                    "<div class='msg-header' style='text-align: center; padding-top: 5px;'>"+
-                      "<div>"+
-                        "<img class='avatar' src='./demo.jpg'>"+
-                      "</div>"+
-                      "<div class='msg-username'>"+
-                        "test"+i+
-                      "</div>"+
-                    "</div>"+
-                    "<div class='msg-body'>"+
-                      "<img class='corner' src='./corner.png'>"+
-                      "testcontent"+
-                    "</div>"+
-                    "<div class='msg-time' style='width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;' >"+
-                      "11/30 10:31"+
-                    "</div>"+
-                  "</div>"+
-                "</li>"
-    }
-    // 第一次加载
-    if (jQuery("#msg_list>li").hasClass('flag')) {
-      jQuery("#msg_list>li.flag").addClass('used')
-      jQuery("#msg_list>li.flag").after(_html)
-      jQuery("#msg_list>li.used").removeClass('flag').removeClass('used')
-    } else {
-      jQuery("#msg_list").append(_html)
-      jQuery("#msg_list>li:last").addClass('flag')
-    }
+    // for (var i=1; i<= 60; i++) {
+    //   _html += "<li class='li2'>"+
+    //               "<div class='msg-txt-box2'>"+
+    //                 "<div class='msg-header' style='text-align: center; padding-top: 5px;'>"+
+    //                   "<div>"+
+    //                     "<img class='avatar' src='./demo.jpg'>"+
+    //                   "</div>"+
+    //                   "<div class='msg-username'>"+
+    //                     "test"+i+
+    //                   "</div>"+
+    //                 "</div>"+
+    //                 "<div class='msg-body'>"+
+    //                   "<img class='corner' src='./corner.png'>"+
+    //                   "testcontent"+
+    //                 "</div>"+
+    //                 "<div class='msg-time' style='width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;' >"+
+    //                   "11/30 10:31"+
+    //                 "</div>"+
+    //               "</div>"+
+    //             "</li>"
+    // }
+    // // 第一次加载
+    // if (jQuery("#msg_list>li").hasClass('flag')) {
+    //   jQuery("#msg_list>li.flag").addClass('used')
+    //   jQuery("#msg_list>li.flag").after(_html)
+    //   jQuery("#msg_list>li.used").removeClass('flag').removeClass('used')
+    // } else {
+    //   jQuery("#msg_list").append(_html)
+    //   jQuery("#msg_list>li:last").addClass('flag')
+    // }
     
     jQuery("#wraper").Xslider({ 
       scrollobj: "ul#msg_list",
-      unitdisplayed:1, //可视的单位个数   必需项;
-      numtoMove:3, //要移动的单位个数    必需项;
+      unitdisplayed:7, //可视的单位个数   必需项;
+      numtoMove:1, //要移动的单位个数    必需项;
       dir:"V",//水平移动还是垂直移动，默认H为水平移动，传入V则表示垂直移动;
       loop:"cycle",
       autoscroll:2000,
-      speed:5000,
-      normalHeight: 90
+      speed:1000,
+      normalHeight: 90,
+      deletePoint: 50// 当留言数达到50个开始删除滚动结点
     });
     var scrollTimmer=setInterval(render,2000);
     jQuery("#add").on('click', function () {
@@ -168,6 +181,23 @@
     })
     jQuery("#start").on('click', function () {
       scrollTimmer=setInterval(render,2000);
+    })
+    jQuery("#run").on('click', function () {
+      var start = null;
+      var element = document.getElementById('flower');
+      var clientHeight = document.documentElement.clientHeight+80
+      function step(timestamp) {
+        if (!start) start = timestamp;
+        var progress = timestamp - start;
+        element.style.bottom = Math.min(progress/2, clientHeight) + 'px';
+        if (progress < clientHeight*2) {
+          window.requestAnimationFrame(step);
+        } else {
+          window.cancelAnimationFrame(step)
+        }
+      }
+
+      window.requestAnimationFrame(step);
     })
   </script>
 </body>
