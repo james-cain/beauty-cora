@@ -41,25 +41,21 @@
     }
     @keyframes flower-down {
       0% {
-        transform: translate(0px, 0px);
         transform: scale(1);
         opacity: 1;
       }
       100% {
         transform: scale(1);
-        transform: translate(0px, 50px);
         opacity: 0;
       }
     }
     @-webkit-keyframes flower-down {
       0% {
-        transform: translate(0px, 0px);
         transform: scale(1);
         opacity: 1;
       }
       100% {
         transform: scale(1);
-        transform: translate(0px, 50px);
         opacity: 0;
       }
     }
@@ -149,7 +145,7 @@
   </div>
   <div class="flowerDiv" id="flowerDiv">
     <img src="./flower2.png" class="flow2" id="flower"/>
-    <span class="flowerCount">X100</span>
+    <span class="flowerCount" id="flower-count">X100</span>
   </div>
   <div class="videolistwraper" id="wraper">
     <div class="videolist">
@@ -214,12 +210,12 @@
                           "<img class='avatar' src='./demo.jpg'>"+
                         "</div>"+
                         "<div class='msg-username'>"+
-                          "test"+renderArr[i]+
+                          "test"+
                         "</div>"+
                       "</div>"+
                       "<div class='msg-body'>"+
                         "<img class='corner' src='./corner.png'>"+
-                        "testcontent"+
+                        renderArr[i]+
                       "</div>"+
                       "<div class='msg-time' style='width: 150px; background: rgba(51, 51, 51, 0.2); line-height: 90px; color: #fff; border-radius: 0 5px 5px 0;' >"+
                         "11/30 10:31"+
@@ -288,11 +284,19 @@
     jQuery("#add").on('click', function () {
       var r = Math.round(Math.random()*25+1)
       for(var i=0; i<r; i++) {
-        messageArr.push(''+r+i)
+        if (i%2 === 0) {
+          messageArr.push('送鲜花')
+        } else if (i === 11) {
+          messageArr.push('[玫瑰]')
+        } else if (i === 3) {
+          messageArr.push('送花')
+        } else {
+          messageArr.push('欢迎')
+        }
       }
+      animate(expToSum(messageArr, ['送鲜花','[玫瑰]','送花']))
     })
     jQuery("#delete").on('click', function () {
-      console.log(jQuery("#msg_list>li.flag").nextAll().length)
       var afterFlagLength = jQuery("#msg_list>li.flag").nextAll().length
       var deleteCount = afterFlagLength < 5 ? afterFlagLength : 5
       for(var i=0; i<deleteCount; i++) {
@@ -306,13 +310,26 @@
       scrollTimmer=setInterval(render,2000);
     })
     jQuery("#run").on('click', function () {
+      animate(11)
+    })
+    // 计算统计数
+    function expToSum (arr, exp) {
+      return arr.reduce(function (count, judge) {
+        if (exp.indexOf(judge) > -1) {
+          return ++count
+        } else {
+          return count
+        }
+      }, 0)
+    }
+    // 送花动画效果
+    function animate (sum) {
       var classList = document.getElementById('flowerDiv').classList
-      var sum = 89
       if (sum>10) {
         classList.remove('flower-no-active')
         classList.add('flower-active')
       }
-      
+      document.getElementById('flower-count').textContent = 'X' + sum
       var start = null;
       if (sum <= 10) {
         for (var count=1; count<=sum; count++) {
@@ -343,7 +360,7 @@
         }
       }
       window.requestAnimationFrame(step);
-    })
+    }
   </script>
 </body>
 </html>
